@@ -19,7 +19,6 @@ class statusController extends Controller
     public function pending(Request $request)
     {
         $orderId = $request->query('order_id');
-    // Alih-alih menampilkan view 'pending', kita REDIRECT ke rute detail
     return redirect()->route('transaksi.show', ['order_id' => $orderId]);
     }
 

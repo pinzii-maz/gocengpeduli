@@ -16,7 +16,6 @@ class PHPMailerController extends Controller
         if (empty($emailTujuan) || !filter_var($emailTujuan, FILTER_VALIDATE_EMAIL)) {
             return response()->json(['error' => 'Alamat email penerima tidak valid!'], 400);
         }
-        // Path ke file lampiran PDF
         $filePath = storage_path('app/nota-attachments/nota.pdf'); // contoh
 
         // Cek apakah file ada
@@ -27,16 +26,14 @@ class PHPMailerController extends Controller
         $mail = new PHPMailer(true);
 
         try {
-            // Konfigurasi SMTP Mailtrap
             $mail->isSMTP();
-            $mail->Host = 'smtp.gmail.com'; // Ganti ke Gmail kalau perlu
+            $mail->Host = 'smtp.gmail.com'; 
             $mail->SMTPAuth = true;
-            $mail->Username = 'MAIL_USERNAME'; // Ganti
-            $mail->Password = 'MAIL_PASSWORD'; // Ganti
+            $mail->Username = 'MAIL_USERNAME'; 
+            $mail->Password = 'MAIL_PASSWORD'; 
             $mail->SMTPSecure = 'tls';
             $mail->Port = 587;
 
-            // Pengirim & penerima
             $mail->setFrom('admin@webdonasi.com', 'Admin Donasi');
             $mail->addAddress($emailTujuan);
 

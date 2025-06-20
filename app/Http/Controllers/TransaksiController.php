@@ -18,19 +18,14 @@ class TransaksiController extends Controller
         $orderId = 'TRX-' . time() . '-' . rand(100, 999);
         
         $transaksi = Transaksi::create([
-        'order_id' => $orderId, // <-- PENTING
+        'order_id' => $orderId,
         'donation_id' => $request->donation_id,
         'donor_name' => $request->donor_name,
         'donor_email' => $request->donor_email,
         'amount' => $request->amount,
-        'status' => 'pending', // Status awal
+        'status' => 'pending',
     ]);
 
-        // $requestData = $request->all();
-        // $requestData['order_id'] = $orderId;
-        
-        // // Buat transaksi dengan order_id
-        // $transaksi = Transaksi::create($requestData);
 
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
@@ -74,38 +69,36 @@ class TransaksiController extends Controller
         return view('transaksi_detail', compact('transaksi'));
     }
 
-public function callback(Request $request)
-{
-    try {
-        \Midtrans\Config::$serverKey = config('midtrans.server_key');
-        \Midtrans\Config::$isProduction = false; // Sesuaikan dengan environment Anda
-        $notification = new \Midtrans\Notification();
-
-        $orderId = $notification->order_id;
-        $transactionStatus = $notification->transaction_status;
-        $fraudStatus = $notification->fraud_status;
-
-        Log::info("📥 Notifikasi Midtrans diterima untuk order_id: $orderId");
-
-        $transaksi = Transaksi::where('order_id', $orderId)->first();
+    public function callback(Request $request)
+    {
+        try {
+            \Midtrans\Config::$serverKey = config('midtrans.server_key');
+            \Midtrans\Config::$isProduction = false; // Sesuaikan dengan environment Anda
+            $notification = new \Midtrans\Notification();
+            
+            $orderId = $notification->order_id;
+            $transactionStatus = $notification->transaction_status;
+            $fraudStatus = $notification->fraud_status;
+            
+            Log::info("📥 Notifikasi Midtrans diterima untuk order_id: $orderId");
+            
+            $transaksi = Transaksi::where('order_id', $orderId)->first();
 
         if (!$transaksi) {
             Log::error("❌ Transaksi tidak ditemukan: $orderId");
             return response()->json(['message' => 'Transaksi tidak ditemukan'], 404);
         }
 
-        // PENTING: Jangan proses jika status sudah final (success/failed)
         if ($transaksi->status === 'success' || $transaksi->status === 'failed') {
             Log::info("🟡 Notifikasi untuk order_id: $orderId diabaikan karena status sudah final: {$transaksi->status}");
             return response()->json(['message' => 'Transaksi sudah memiliki status final.'], 200);
         }
 
-        // CUKUP GUNAKAN SATU BLOK MATCH YANG BENAR
         $newStatus = match (strtolower($transactionStatus)) {
             'capture', 'settlement' => ($fraudStatus === 'accept') ? 'success' : 'challenge',
             'pending' => 'pending',
             'deny', 'cancel', 'expire' => 'failed',
-            default => $transaksi->status, // Jika status tidak dikenal, jangan diubah
+            default => $transaksi->status,
         };
 
         if ($transaksi->status !== $newStatus) {
@@ -113,10 +106,7 @@ public function callback(Request $request)
             $transaksi->save();
             Log::info("🟢 Status untuk order_id: $orderId berhasil diperbarui menjadi: $newStatus");
             
-            // Logika tambahan setelah sukses (misal: kirim email, update total donasi)
             if ($newStatus === 'success') {
-                // Di sinilah tempat Anda memanggil logika untuk mengupdate total donasi
-                // Contoh: $donation = $transaksi->donation; $donation->updateCurrentAmount();
             }
 
         } else {

@@ -5,7 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\statusController;
 use App\Http\Controllers\DonationController;
 use App\Http\Controllers\PHPMailerController;
-use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\TransaksiController;  
+use App\Http\Controllers\GalleryController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/', [DonationController::class, 'index'])->name('home');
 Route::get('/transaksi', [TransaksiController::class, 'index']);
@@ -17,3 +19,7 @@ Route::get('/pending', [statusController::class, 'pending'])->name('payment.pend
 Route::get('/failed', [statusController::class, 'failed'])->name('payment.failed');
 
 Route::get('/transaksi/{order_id}', [TransaksiController::class, 'show'])->name('transaksi.show');
+Route::get('/gallery', [GalleryController::class, 'gallerypage'])->name('gallery.page');
+
+Route::get('/laporan-donasi', [ReportController::class, 'index'])->name('laporan.index');
+Route::get('/laporan-donasi/{donasi}', [ReportController::class, 'show'])->name('laporan.show');

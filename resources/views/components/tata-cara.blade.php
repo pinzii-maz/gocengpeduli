@@ -249,7 +249,7 @@
                     <h4 class="text-xl font-bold text-neutral-100 mb-3">Donasi Tercatat!</h4>
                     <p class="text-neutral-100 mb-4">
                         Terima kasih telah menjadi bagian dari perubahan! 🎉<br>
-                        <span class="block mt-2">Status donasi akan diperbarui dalam 1x24 jam melalui:</span>
+                        <span class="block mt-2">Kami akan mengirimkan nota donasi melalui email yang terdaftar:</span>
                     </p>
 
                     <div class="space-y-4">
@@ -260,7 +260,8 @@
                                     d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             <div>
-                                <p class="text-sm text-green-600 font-medium">Pelacakan Donasi</p>
+                                <p class="text-sm text-green-600 font-medium">Cek email secara berkala agar anda bisa
+                                    melihat nota donasi</p>
                                 <div class="flex gap-3 mt-2">
                                     <a href="#"
                                         class="text-green-600 text-sm hover:underline flex items-center gap-1">

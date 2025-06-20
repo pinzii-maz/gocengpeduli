@@ -25,6 +25,7 @@
             <a href="#" class="text-sm/7 font-semibold text-gray-900">Home</a>
             <a href="#tata-cara-donasi" class="text-sm/7 font-semibold text-gray-900">Tata cara</a>
             <a href="#donasi" class="text-sm/7 font-semibold text-gray-900">Donasi</a>
+            <a href="{{ route('laporan.index') }}">Laporan Donasi</a>
         </div>
 
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">

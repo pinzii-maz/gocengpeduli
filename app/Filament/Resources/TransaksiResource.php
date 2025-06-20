@@ -87,8 +87,8 @@ class TransaksiResource extends Resource
                             $mail->SMTPSecure = 'tls';
                             $mail->Port = 587;
             
-                            $mail->Username = env('MAIL_USERNAME'); // ambil dari .env
-                            $mail->Password = env('MAIL_PASSWORD'); // ambil dari .env
+                            $mail->Username = env('MAIL_USERNAME');
+                            $mail->Password = env('MAIL_PASSWORD'); 
                             $mail->setFrom(env('MAIL_FROM_ADDRESS'), env('MAIL_FROM_NAME')); 
                             $mail->addAddress($record->donor_email);
             

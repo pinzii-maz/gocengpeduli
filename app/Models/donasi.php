@@ -17,19 +17,24 @@ class donasi extends Model
     protected $fillable = [
         'title',
         'description',
-        'category',
+        'category_id',
         'target_amount',
         'deadline',
         'image',
         'recipient_count',
         'current_amount',
-        'donor_count'
+        'donor_count',
+        'report_document'
     ];
 
     
 
     public function transaksis() {
         return $this->hasMany(Transaksi::class,'donation_id');
+    }
+
+    public function category() {
+        return $this->belongsTo(Category::class);
     }
 
     public function getTotalTerkumpulAttribute()
@@ -64,7 +69,7 @@ class donasi extends Model
             return $this->successfulTransactions->count();
         }
         
-        return $this->transactions()->where('status', 'success')->count();
+        return $this->transaksis()->where('status', 'success')->count();
     }
 
     public function getSisaHariAttribute()

@@ -47,53 +47,60 @@
                                 <span>{{ $item->deadline_label }}</span>
                             </div>
 
-
                         </div>
-                        <div class="p-4">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span
-                                    class="inline-block px-2 py-0.5 text-xs font-medium text-white bg-green-500 rounded-full">
-                                    {{ $item->category }}
-                                </span>
+                        <div class="p-4 flex flex-col flex-grow"> {{-- Tambahan flex untuk layout rata --}}
+
+                            {{-- Kategori, Judul, Deskripsi (Bagian Atas) --}}
+                            <div>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span
+                                        class="inline-block px-2 py-1 text-xs font-semibold text-white bg-green-600 rounded-full">
+                                        {{ $item->category->name ?? 'Tanpa Kategori' }}
+                                    </span>
+                                </div>
+                                <h3 class="text-lg font-bold text-gray-900 truncate">{{ $item->title }}</h3>
+                                <p class="mt-1 text-gray-600 text-sm line-clamp-2 flex-grow">{{ $item->description }}
+                                </p>
                             </div>
 
-                            <h3 class="text-lg font-bold text-gray-800 truncate">{{ $item->title }}</h3>
-                            <p class="mt-2 text-gray-600 text-sm line-clamp-2">{{ $item->description }}</p>
+                            {{-- Blok Statistik Donasi (Bagian Bawah yang Diperbaiki) --}}
+                            <div class="mt-auto pt-4 border-t">
 
-                            <div class="mt-4">
-                                @php
-                                    $percentage =
-                                        $item->target_amount > 0
-                                            ? round(($item->current_amount / $item->target_amount) * 100)
-                                            : 0;
-                                @endphp
-
-                                <div class="flex justify-between items-center text-sm mb-1">
-                                    @if ($item->current_amount > 0)
-                                        <span class="text-blue-600 font-semibold">Terkumpul: @rupiah($item->total_terkumpul)</span>
-                                        <span class="text-gray-500">{{ $item->persentase }}%</span>
-                                    @else
-                                    @endif
-                                </div>
-
+                                {{-- Progress Bar (hanya tampil jika ada target) --}}
                                 @if ($item->target_amount > 0)
-                                    <div>
-                                        <span class="text-blue-600 font-semibold">{{ $item->persentase }}%</span>
-                                    </div>
-                                    <div class="bg-gray-200 rounded-full h-2">
-                                        <div class="bg-gradient-to-r from-blue-400 to-blue-500 rounded-full h-2"
-                                            style="width: {{ $item->persentase }}%"></div>
+                                    <div class="mb-2" title="{{ $item->persentase }}% tercapai">
+                                        <div class="bg-gray-200 rounded-full h-2">
+                                            <div class="bg-gradient-to-r from-teal-400 to-blue-500 h-2 rounded-full"
+                                                style="width: {{ $item->persentase }}%">
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
 
-                                <div class="flex justify-between mt-2 text-xs text-gray-500">
-                                    @if ($item->target_amount > 0)
-                                        <span>Target:
-                                            {{ \App\Helpers\FormatHelpers::rupiah($item->target_amount) }}</span>
-                                    @else
-                                        <span class="italic">Tanpa target</span>
-                                    @endif
-                                    <span>{{ $item->jumlah_donatur }} Donatur</span>
+                                {{-- Info Dana Terkumpul, Target, dan Donatur --}}
+                                <div class="flex justify-between items-end">
+
+                                    {{-- Kiri: Dana Terkumpul (dibuat lebih menonjol) --}}
+                                    <div>
+                                        <span class="text-xs text-gray-500">Terkumpul</span>
+                                        <p class="text-sm font-bold text-gray-800">
+                                            {{ \App\Helpers\FormatHelpers::rupiah($item->total_terkumpul) }}
+                                        </p>
+                                    </div>
+
+                                    {{-- Kanan: Target Dana atau Jumlah Donatur --}}
+                                    <div class="text-right">
+                                        @if ($item->target_amount > 0)
+                                            <span class="text-sm text-gray-500">Target</span>
+                                            <p class="font-semibold text-sm text-gray-700">
+                                                {{ \App\Helpers\FormatHelpers::rupiah($item->target_amount) }}
+                                            </p>
+                                        @else
+                                            <span
+                                                class="text-sm font-semibold text-gray-700">{{ $item->jumlah_donatur }}
+                                                Donatur</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -172,7 +179,8 @@
                                         <input type="hidden" name="donation_id" value="{{ $item->id }}">
                                         <!-- Donation Amount Section -->
                                         <div class="space-y-4">
-                                            <label class="block text-sm font-medium text-gray-700">Jumlah Donasi</label>
+                                            <label class="block text-sm font-medium text-gray-700">Jumlah
+                                                Donasi</label>
                                             <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                                                 <template
                                                     x-for="amount in [50000, 100000, 250000, 500000, 1000000, 2000000]"
@@ -244,7 +252,7 @@
 
 
     {{-- Gallery start --}}
-    <x-gallery></x-gallery>
+    <x-gallery :galleries="$galleries"></x-gallery>
     {{-- Gallery end --}}
 
     {{-- section end --}}

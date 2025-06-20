@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Donasi;
+use App\Models\Gallery;
 
 class DonationController extends Controller
 {
@@ -15,7 +16,9 @@ class DonationController extends Controller
                         ->latest()
                         ->get();
 
-    return view('home', compact('donasi'));
+        $galleries = Gallery::latest()->get(); 
+
+     return view('home', compact('donasi', 'galleries'));
     }
 
 }

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('donor_name');
             $table->string('donor_email');
             $table->decimal('amount', 15, 2);
-             $table->text('snap_token')->nullable();
+            $table->text('snap_token')->nullable();
             $table->enum('status', ['pending', 'success', 'failed', 'expired', 'challenge'])->default('pending');
             $table->timestamps();
             });
