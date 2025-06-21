@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -156,20 +157,17 @@
 
                                     <!-- Progress Section -->
                                     <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                        <div class="flex items-center justify-between mb-2">
-                                            <h3 class="font-semibold text-blue-800">Progress Penggalangan Dana</h3>
-                                            <span class="text-blue-600 font-semibold">{{ $item->persentase }}%</span>
+                                        <div class="flex justify-between items-center text-sm text-gray-600 mb-1">
+                                            <span>Terkumpul</span>
+                                            <span>{{ \App\Helpers\FormatHelpers::rupiah($item->total_terkumpul) }}</span>
                                         </div>
                                         <div class="bg-gray-200 rounded-full h-2">
                                             <div class="bg-gradient-to-r from-blue-400 to-blue-500 rounded-full h-2"
                                                 style="width: {{ $item->persentase }}%"></div>
                                         </div>
-                                        <div class="flex justify-between mt-2 text-sm text-gray-600">
-                                            <span>Terkumpul:
-                                                {{ \App\Helpers\FormatHelpers::rupiah($item->total_terkumpul) }}
-                                            </span>
-                                            <span>Target:
-                                                {{ \App\Helpers\FormatHelpers::rupiah($item->target_amount) }}</span>
+                                        <div class="flex justify-between items-center text-sm text-gray-600 mt-1">
+                                            <span>Target</span>
+                                            <span>{{ \App\Helpers\FormatHelpers::rupiah($item->target_amount) }}</span>
                                         </div>
                                     </div>
 
@@ -203,13 +201,23 @@
                                                 }
                                             </script>
 
-                                            <div class="relative">
+                                            <div class="relative" x-data="{ isCustom: false }">
+                                                <label for="customAmount" x-show="isCustom"
+                                                    class="absolute -top-2 left-2 inline-block bg-white px-1 text-xs font-medium text-gray-900"
+                                                    x-transition:enter="transition ease-out duration-200"
+                                                    x-transition:enter-start="opacity-0 scale-95"
+                                                    x-transition:enter-end="opacity-100 scale-100"
+                                                    x-transition:leave="transition ease-in duration-100"
+                                                    x-transition:leave-start="opacity-100 scale-100"
+                                                    x-transition:leave-end="opacity-0 scale-95">
+                                                    Minimal Rp 1.000
+                                                </label>
                                                 <input type="number" id="customAmount" x-model="selectedAmount"
+                                                    @focus="isCustom = true"
+                                                    @blur="isCustom = (selectedAmount !== null && selectedAmount !== '')"
                                                     name="amount" placeholder="Masukkan nominal lain"
                                                     class="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
-                                                    min="500" required>
-                                                <span
-                                                    class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">Rp</span>
+                                                    min="1000" required>
                                             </div>
                                         </div>
 
@@ -233,7 +241,7 @@
                                         </div>
 
                                         <!-- Submit Button -->
-                                        <button type="submit"
+                                        <button type="submit" id="submitBtn"
                                             class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-medium transition-all">
                                             Lanjutkan Pembayaran
                                         </button>
@@ -261,6 +269,27 @@
     {{-- footer --}}
     <x-footer></x-footer>
     {{-- footer end --}}
+
+    <script>
+        document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Refresh CSRF token sebelum submit
+            fetch('/csrf-token')
+                .then(response => response.json())
+                .then(data => {
+                    // Update CSRF token
+                    document.querySelector('input[name="_token"]').value = data.token;
+                    // Submit form
+                    this.submit();
+                })
+                .catch(error => {
+                    console.error('Error refreshing CSRF token:', error);
+                    // Submit anyway
+                    this.submit();
+                });
+        });
+    </script>
 
 </body>
 

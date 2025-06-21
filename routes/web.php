@@ -23,3 +23,7 @@ Route::get('/gallery', [GalleryController::class, 'gallerypage'])->name('gallery
 
 Route::get('/laporan-donasi', [ReportController::class, 'index'])->name('laporan.index');
 Route::get('/laporan-donasi/{donasi}', [ReportController::class, 'show'])->name('laporan.show');
+
+Route::get('/csrf-token', function () {
+    return response()->json(['token' => csrf_token()]);
+});

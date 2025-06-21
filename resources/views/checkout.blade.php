@@ -10,67 +10,95 @@
 
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key="{{ config('services.midtrans.client_key') }}"></script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
-<body class="bg-gradient-to-br from-blue-100 to-white min-h-screen flex items-center justify-center font-sans">
+<body class="bg-gray-50 font-sans">
 
-    <div class="bg-white shadow-2xl rounded-2xl max-w-xl w-full p-8 space-y-8 animate-fade-in-down">
+    <div class="min-h-screen flex items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
+        <div class="w-full max-w-6xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
 
-        <div class="text-center border-b pb-6">
-            <h1 class="text-3xl font-bold text-blue-700">Checkout Donasi</h1>
-            <p class="text-gray-500 mt-2 text-sm">Mohon periksa kembali data donasi Anda sebelum melanjutkan pembayaran.
-            </p>
-        </div>
+                <!-- Left Side: Content -->
+                <div class="space-y-8">
+                    <!-- Header -->
+                    <div>
+                        <span
+                            class="inline-block bg-blue-100 text-blue-700 text-sm font-semibold px-4 py-2 rounded-full mb-4">
+                            Satu Langkah Lagi
+                        </span>
+                        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
+                            Periksa Kembali Donasi Anda
+                        </h1>
+                        <p class="mt-4 text-lg text-gray-600">
+                            Pastikan semua informasi sudah benar sebelum melanjutkan ke proses pembayaran yang aman.
+                        </p>
+                    </div>
 
+                    <!-- Donation Details Card -->
+                    <div class="bg-white border border-gray-200 rounded-xl p-6 space-y-4 shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <span class="text-gray-500 text-sm">Program Donasi</span>
+                            <span class="font-bold text-gray-800 text-right">{{ $transaksi->donasi->title }}</span>
+                        </div>
+                        <div class="border-t border-gray-100"></div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm">Nama Donatur</span>
+                            <span class="font-medium text-gray-800">{{ $transaksi->donor_name }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-500 text-sm">Email</span>
+                            <span class="font-medium text-gray-800 truncate">{{ $transaksi->donor_email }}</span>
+                        </div>
+                        <div class="border-t border-gray-100"></div>
+                        <div class="bg-blue-50/50 rounded-lg p-4 flex justify-between items-center">
+                            <span class="font-semibold text-blue-900">Total Donasi</span>
+                            <span
+                                class="font-extrabold text-blue-700 text-2xl">Rp{{ number_format($transaksi->amount, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
 
-        <div class="space-y-4 text-gray-700">
-            <div class="flex justify-between items-center">
-                <span class="font-medium">Nama Donatur:</span>
-                <span>{{ $transaksi->donor_name }}</span>
+                    <!-- Action Buttons -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button id="back-button"
+                            class="w-full border border-gray-300 text-gray-700 font-semibold py-3 rounded-lg hover:bg-gray-100 transition duration-300">
+                            Batalkan
+                        </button>
+                        <button id="pay-button"
+                            class="w-full bg-blue-600 text-white font-semibold py-3 rounded-lg hover:bg-blue-700 transition duration-300 shadow-md flex items-center justify-center gap-2">
+                            <span id="pay-button-text">Lanjutkan Pembayaran</span>
+                            <svg id="pay-button-spinner" class="animate-spin h-5 w-5 text-white hidden"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Side: Illustration -->
+                <div class="hidden lg:flex items-center justify-center">
+                    <img src="{{ asset('ilustrasi-checkout.png') }}" alt="Ilustrasi Checkout Donasi"
+                        class="w-full max-w-md object-contain">
+                </div>
             </div>
-            <div class="flex justify-between items-center">
-                <span class="font-medium">Email:</span>
-                <span>{{ $transaksi->donor_email }}</span>
-            </div>
-            <div class="flex justify-between items-center">
-                <span class="font-medium">Jumlah Donasi:</span>
-                <span class="text-blue-700 font-bold">Rp{{ number_format($transaksi->amount, 0, ',', '.') }}</span>
-            </div>
-        </div>
-
-        <div class="border-t pt-6 space-y-4">
-
-            <button id="pay-button"
-                class="w-full bg-blue-600 text-white font-semibold py-3 rounded-xl hover:bg-blue-700 transition duration-300 shadow-md flex items-center justify-center gap-2">
-                <span id="pay-button-text">Bayar Sekarang</span>
-                <svg id="pay-button-spinner" class="animate-spin h-5 w-5 text-white hidden"
-                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                        stroke-width="4"></circle>
-                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
-                </svg>
-            </button>
-
-            <button id="back-button"
-                class="w-full border border-gray-300 text-gray-600 font-semibold py-3 rounded-xl hover:bg-gray-100 transition duration-300">
-                Kembali ke Daftar Donasi
-            </button>
         </div>
     </div>
 
-
     <script>
+        lucide.createIcons();
+
         const payButton = document.getElementById('pay-button');
         const payButtonText = document.getElementById('pay-button-text');
         const payButtonSpinner = document.getElementById('pay-button-spinner');
 
         payButton.addEventListener('click', function() {
             payButton.disabled = true;
-            payButtonText.textContent = 'Memproses Pembayaran...';
+            payButtonText.textContent = 'Memproses...';
             payButtonSpinner.classList.remove('hidden');
 
             snap.pay('{{ $snapToken }}', {
@@ -113,27 +141,24 @@
                     });
                 },
                 onClose: function() {
-                    // Kalau user tutup snap, reset tombol lagi
                     payButton.disabled = false;
-                    payButtonText.textContent = 'Bayar Sekarang';
+                    payButtonText.textContent = 'Lanjutkan Pembayaran';
                     payButtonSpinner.classList.add('hidden');
-
                     Swal.fire({
                         icon: 'info',
                         title: 'Pembayaran Belum Selesai',
-                        text: 'Kamu menutup popup pembayaran sebelum selesai.'
+                        text: 'Anda menutup popup pembayaran sebelum selesai.'
                     });
                 }
             });
         });
 
-        // Back button
         const backButton = document.getElementById('back-button');
         backButton.addEventListener('click', function(event) {
             event.preventDefault();
             Swal.fire({
-                title: 'Yakin mau kembali?',
-                text: "Donasi kamu belum diselesaikan!",
+                title: 'Yakin ingin kembali?',
+                text: "Donasi Anda belum diselesaikan!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -149,3 +174,5 @@
     </script>
 
 </body>
+
+</html>
