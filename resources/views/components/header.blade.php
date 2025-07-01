@@ -55,6 +55,8 @@
                 <a href="#" class="block py-2 text-gray-900 hover:bg-gray-50 rounded-lg px-3">Home</a>
                 <a href="#" class="block py-2 text-gray-900 hover:bg-gray-50 rounded-lg px-3">Tata Cara</a>
                 <a href="#" class="block py-2 text-gray-900 hover:bg-gray-50 rounded-lg px-3">Donasi</a>
+                <a href="{{ route('laporan.index') }}"
+                    class="block py-2 text-gray-900 hover:bg-gray-50 rounded-lg px-3">Laporan Donasi</a>
             </nav>
         </div>
     </div>

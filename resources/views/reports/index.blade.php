@@ -50,7 +50,7 @@
                                 <span class="font-bold text-green-700">{{ $donation->jumlah_donatur }}</span>
                             </div>
                         </div>
-                        <div class="mb-4">
+                        {{-- <div class="mb-4">
                             <div class="flex items-center justify-between text-xs text-gray-500 mb-1">
                                 <span>Progress</span>
                                 <span>{{ $donation->persentase ?? 0 }}%</span>
@@ -59,7 +59,7 @@
                                 <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-2 rounded-full transition-all duration-700"
                                     style="width: {{ $donation->persentase ?? 0 }}%"></div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="flex justify-end mt-4">
                         <a href="{{ route('laporan.show', $donation) }}"

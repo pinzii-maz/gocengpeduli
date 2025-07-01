@@ -73,7 +73,7 @@ class TransaksiController extends Controller
     {
         try {
             \Midtrans\Config::$serverKey = config('midtrans.server_key');
-            \Midtrans\Config::$isProduction = false; // Sesuaikan dengan environment Anda
+            \Midtrans\Config::$isProduction = false;
             $notification = new \Midtrans\Notification();
             
             $orderId = $notification->order_id;

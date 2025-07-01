@@ -16,7 +16,7 @@ class PHPMailerController extends Controller
         if (empty($emailTujuan) || !filter_var($emailTujuan, FILTER_VALIDATE_EMAIL)) {
             return response()->json(['error' => 'Alamat email penerima tidak valid!'], 400);
         }
-        $filePath = storage_path('app/nota-attachments/nota.pdf'); // contoh
+        $filePath = storage_path('app/nota-attachments/nota.pdf');
 
         // Cek apakah file ada
         if (!file_exists($filePath)) {

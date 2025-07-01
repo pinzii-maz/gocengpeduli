@@ -81,7 +81,7 @@
             </div>
 
             {{-- Progress Bar --}}
-            <div class="mb-8">
+            {{-- <div class="mb-8">
                 <div class="flex items-center justify-between mb-1">
                     <span class="text-sm text-gray-600">Progress Penggalangan Dana</span>
                     <span class="text-sm font-semibold text-blue-700">{{ $donasi->persentase ?? 0 }}%</span>
@@ -90,7 +90,7 @@
                     <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-700"
                         style="width: {{ $donasi->persentase ?? 0 }}%"></div>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- Tab Interaktif: Laporan & Dokumentasi --}}
             <div x-data="{ tab: 'laporan' }" class="mb-8">
@@ -150,7 +150,7 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-500">
                                         {{ $transaction->donor_email }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap text-gray-800 text-right font-semibold">
-                                        @rupiah($transaction->amount)</td>
+                                        {{ \App\Helpers\FormatHelpers::rupiah($transaction->amount) }}
                                 </tr>
                             @endforeach
                         </tbody>
